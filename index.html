@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Location</title>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    
+                    // Kirim lokasi ke Formspree
+                    sendLocationToEmail(latitude, longitude);
+                }, function(error) {
+                    alert("Error getting location. Please allow access to your location.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function sendLocationToEmail(latitude, longitude) {
+            const formData = new FormData();
+            formData.append("Latitude", latitude);
+            formData.append("Longitude", longitude);
+
+            // Ganti dengan endpoint Formspree Anda
+            fetch("https://formspree.io/f/mnnjvvak", {
+                method: "POST",
+                body: formData,
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Location shared successfully!");
+                } else {
+                    alert("Failed to share location. Please try again.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+
+        // Jalankan fungsi getLocation saat halaman dimuat
+        window.onload = getLocation;
+    </script>
+</head>
+<body>
+    <h1>Share Your Location</h1>
+    <p>Please allow access to your location to proceed.</p>
+</body>
+</html>
